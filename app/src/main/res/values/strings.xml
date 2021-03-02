@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Mausam App</string>
+    <string name="enter_city_name">Enter city name</string>
+    <string name="mausam_update">Mausam Update!</string>
+    <string name="search">Search</string>
+    <string name="about">About</string>
+    <string name="enter_country_code_optional">Enter country code (Optional)</string>
+    <string name="info">Info:</string>
+</resources>
