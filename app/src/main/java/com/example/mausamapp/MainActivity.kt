@@ -1,5 +1,7 @@
 package com.example.mausamapp
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -7,12 +9,10 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
-import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
@@ -40,10 +40,6 @@ class MainActivity: AppCompatActivity() {
 
 
 
-
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -54,13 +50,18 @@ class MainActivity: AppCompatActivity() {
         tvResult=findViewById(R.id.tvResult)
         progress=findViewById(R.id.progress)
 
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel("MY_ID", "MY_ID", NotificationManager.IMPORTANCE_DEFAULT)
+            val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+
+
+
         findViewById<Button>(R.id.btnGet).setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-
-//                val prg=ProgressDialog(this@MainActivity)
-//                prg.setMessage("Please wait...")
-//                prg.setCancelable(false)
-//                prg.show()
 
 
                 var net: Boolean = isOnline(this@MainActivity)
@@ -93,90 +94,89 @@ class MainActivity: AppCompatActivity() {
 
                     val strReq: StringRequest = object : StringRequest(
 
-                            //https://nabeelj.medium.com/making-a-simple-get-and-post-request-using-volley-beginners-guide-ee608f10c0a9#:~:text=While%20a%20GET%20request%20is,you're%20sending%20data%20to.
-                            Method.POST, tempUrl,
-                            Response.Listener { response ->
-                                var output: String = ""
-                                try {
-                                    var jsonResponse: JSONObject = JSONObject(response)
-                                    var jsonArray: JSONArray = jsonResponse.getJSONArray("weather")
-                                    var jsonObjectWeather: JSONObject = jsonArray.getJSONObject(0)
-                                    var description: String = jsonObjectWeather.getString("description")
+                        //https://nabeelj.medium.com/making-a-simple-get-and-post-request-using-volley-beginners-guide-ee608f10c0a9#:~:text=While%20a%20GET%20request%20is,you're%20sending%20data%20to.
+                        Method.POST, tempUrl,
+                        Response.Listener { response ->
+                            var output: String = ""
+                            try {
+                                var jsonResponse: JSONObject = JSONObject(response)
+                                var jsonArray: JSONArray = jsonResponse.getJSONArray("weather")
+                                var jsonObjectWeather: JSONObject = jsonArray.getJSONObject(0)
+                                var description: String = jsonObjectWeather.getString("description")
 
-                                    var jsonObjectMain: JSONObject = jsonResponse.getJSONObject("main")
-                                    var temp: Double = jsonObjectMain.getDouble("temp") - 273.15
-                                    var feelsLike: Double = jsonObjectMain.getDouble("feels_like") - 273.15
+                                var jsonObjectMain: JSONObject = jsonResponse.getJSONObject("main")
+                                var temp: Double = jsonObjectMain.getDouble("temp") - 273.15
+                                var feelsLike: Double =
+                                    jsonObjectMain.getDouble("feels_like") - 273.15
 
-                                    var min_temp: Double = jsonObjectMain.getDouble("temp_min") - 273.15
-                                    var max_temp: Double = jsonObjectMain.getDouble("temp_max") - 273.15
+                                var min_temp: Double = jsonObjectMain.getDouble("temp_min") - 273.15
+                                var max_temp: Double = jsonObjectMain.getDouble("temp_max") - 273.15
 
-                                    var humidity: Int = jsonObjectMain.getInt("humidity")
-                                    var pressure: Float = jsonObjectMain.getInt("pressure").toFloat()
+                                var humidity: Int = jsonObjectMain.getInt("humidity")
+                                var pressure: Float = jsonObjectMain.getInt("pressure").toFloat()
 
-                                    var jsonObjectWind: JSONObject = jsonResponse.getJSONObject("wind")
-                                    var speed: String = jsonObjectWind.getString("speed")
+                                var jsonObjectWind: JSONObject = jsonResponse.getJSONObject("wind")
+                                var speed: String = jsonObjectWind.getString("speed")
 
-                                    var jsonObjectCloud = jsonResponse.getJSONObject("clouds")
-                                    var clouds: String = jsonObjectCloud.getString("all")
+                                var jsonObjectCloud = jsonResponse.getJSONObject("clouds")
+                                var clouds: String = jsonObjectCloud.getString("all")
 
-                                    var jsonObjectSys: JSONObject = jsonResponse.getJSONObject("sys")
-                                    var countryName: String = jsonObjectSys.getString("country")
+                                var jsonObjectSys: JSONObject = jsonResponse.getJSONObject("sys")
+                                var countryName: String = jsonObjectSys.getString("country")
 
-                                    var cityName: String = jsonResponse.getString("name")
-
-
-                                    output += " Current weather of  " + cityName + "(" + countryName + ")" + "\n" + "\n Temprature: " + df.format(temp) + "°C" +
-                                            "\n Feels like: " + df.format(feelsLike) + "°C" + "\n Min Temprature: " + df.format(min_temp) + "°C" + "\n Max Temprature: " + df.format(max_temp) + "°C" + "\n Humidity: " + humidity + "%" + "\n Description: " + description +
-                                            "\n Wind speed: " + speed + "m/s" + "\n Cloudiness: " + clouds + "%" + "\n Pressure: " +
-                                            pressure + " hPa"
-                                    //tvResult.setText(output)
+                                var cityName: String = jsonResponse.getString("name")
 
 
-                                    //sending data to second activity
-                                    val intent = Intent(applicationContext, SecondActivity::class.java)
-                                    var city_country: String = ""
-                                    city_country+=cityName+"("+countryName+")"
-                                    intent.putExtra("city_country",city_country)
+                                output += "Feels like: " + df.format(feelsLike) + "°C" + "\n Min Temprature: " + df.format(
+                                    min_temp
+                                ) + "°C" + "\n Max Temprature: " + df.format(max_temp) + "°C" + "\n Humidity: " + humidity + "%" +
+                                        "\n Wind speed: " + speed + "m/s" + "\n Cloudiness: " + clouds + "%" + "\n Pressure: " +
+                                        pressure + " hPa"
+                                //tvResult.setText(output)
 
-                                    var tempIntent: String = ""
-                                    tempIntent+=df.format(temp)+"°C"
-                                    intent.putExtra("tempIntent",tempIntent)
 
-                                    intent.putExtra("descIntent",description)
+                                //sending data to second activity
+                                val intent = Intent(
+                                    applicationContext,
+                                    SecondActivity::class.java
+                                )
+                                var city_country: String = ""
+                                city_country += cityName + "(" + countryName + ")"
+                                intent.putExtra("city_country", city_country)
 
-                                    var minIntent: String = ""
-                                    minIntent+=df.format(min_temp)+"°C"
-                                    intent.putExtra("minIntent",minIntent)
+                                var tempIntent: String = ""
+                                tempIntent += df.format(temp) + "°C"
+                                intent.putExtra("tempIntent", tempIntent)
 
-                                    var maxIntent: String = ""
-                                    maxIntent+=df.format(max_temp)+"°C"
-                                    intent.putExtra("maxIntent",maxIntent)
+                                intent.putExtra("descIntent", description)
 
-                                    var humIntent: String = ""
-                                    humIntent+="Humidity: "+"\n"+humidity + "%"
-                                    intent.putExtra("humIntent",humIntent)
 
-                                    var cloudIntent: String = ""
-                                    cloudIntent+="Cloudiness: "+clouds + "%"
-                                    intent.putExtra("cloudIntent",cloudIntent)
+                                var restIntent: String = ""
+                                restIntent += "Other Classifiers: " + "\n" + output
+                                intent.putExtra("rest", restIntent)
 
-                                    var pressureIntent: String = ""
-                                    humIntent+="Pressure: "+pressure + " hPa"
-                                    intent.putExtra("pressureIntent",pressureIntent)
-                                    startActivity(intent)
+
+                                startActivity(intent)
 
 
 //                                Log.d("anshul", "response: " + response.toString())
 //                                dialog?.dismiss()
-                                } catch (e: JSONException) {
-                                    e.printStackTrace()
-                                }
+                            } catch (e: JSONException) {
+                                e.printStackTrace()
+                            }
 
-                            },
-                            Response.ErrorListener { volleyError -> // error occurred
-                                Log.d("anshul", "problem occurred, volley error: " + volleyError.message)
-                                Toast.makeText(this@MainActivity, "Something went wrong!", Toast.LENGTH_SHORT).show()
-                            }) {
+                        },
+                        Response.ErrorListener { volleyError -> // error occurred
+                            Log.d(
+                                "anshul",
+                                "problem occurred, volley error: " + volleyError.message
+                            )
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Something went wrong!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }) {
                     }
                     requestQueue?.add(strReq)
 
@@ -203,8 +203,6 @@ class MainActivity: AppCompatActivity() {
 
 
 
-
-
     override fun onResume() {
         super.onResume()
         val sh:SharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE)
@@ -225,6 +223,12 @@ class MainActivity: AppCompatActivity() {
         myEdit.apply()
 
     }
+
+
+
+
+
+
 }
 fun isOnline(context: Context?): Boolean {
     if (context == null) return false

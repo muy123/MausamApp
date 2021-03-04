@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:text="This Android application helps you to find any city current temprature and it's other weather classifiers too. This app supports majorly in 50+ languages.
-Please feel free to share your valuable feedback at this mail id: "
+Please shoot an email to share your valuable feedback at this mail id: "
         android:textStyle="bold"></TextView>
     <TextView
         android:id="@+id/mail_id"

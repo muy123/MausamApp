@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "945002987619",
+    "project_id": "mausamapp-37bf4",
+    "storage_bucket": "mausamapp-37bf4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:945002987619:android:7c8c276c125b774d09b856",
+        "android_client_info": {
+          "package_name": "com.example.mausamapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "945002987619-3k0fkdv4q9rhre95h2rudhaf2lgspurb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCrKI43G_JcmnQ_wmQY01s5SWEoJugy00"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "945002987619-3k0fkdv4q9rhre95h2rudhaf2lgspurb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

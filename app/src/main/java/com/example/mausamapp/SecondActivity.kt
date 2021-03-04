@@ -1,9 +1,11 @@
 package com.example.mausamapp
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+
 
 class SecondActivity : AppCompatActivity() {
 
@@ -27,22 +29,11 @@ class SecondActivity : AppCompatActivity() {
         val descIntent:String?=intent.getStringExtra("descIntent")
         findViewById<TextView>(R.id.description).setText(descIntent)
 
-        val minIntent:String?=intent.getStringExtra("minIntent")
-        findViewById<TextView>(R.id.textView4).setText(minIntent)
-        val maxIntent:String?=intent.getStringExtra("maxIntent")
-        findViewById<TextView>(R.id.textView5).setText(maxIntent)
 
-        val humIntent:String?=intent.getStringExtra("humIntent")
-        findViewById<TextView>(R.id.textView6).setText(humIntent)
-
-        val cloudIntent:String?=intent.getStringExtra("cloudIntent")
-        findViewById<TextView>(R.id.textView2).setText(cloudIntent)
-
-        val pressureIntent:String?=intent.getStringExtra("pressureIntent")
-        findViewById<TextView>(R.id.textView3).setText(pressureIntent)
-
-
-
+        val restIntent:String?=intent.getStringExtra("rest")
+        findViewById<TextView>(R.id.rest).setText(restIntent)
+        findViewById<TextView>(R.id.rest).setTextColor(android.graphics.Color.rgb(205, 0, 0))
+        //findViewById<TextView>(R.id.rest).setTextSize(25F)
 
     }
 }
